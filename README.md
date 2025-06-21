@@ -12,7 +12,19 @@ A Go command-line tool for controlling multiple OpenFan Micro devices.
 
 ## Installation
 
+### Using go install (recommended)
+
 ```bash
+go install github.com/riclib/openfan-control@latest
+```
+
+This will install the `openfan-control` binary to your `$GOPATH/bin` directory (or `$HOME/go/bin` if GOPATH is not set).
+
+### Building from source
+
+```bash
+git clone https://github.com/riclib/openfan-control.git
+cd openfan-control
 go build -o openfan-control
 ```
 
