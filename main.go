@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 )
 
 func main() {
@@ -93,6 +94,8 @@ func handleToggle(config *Config, status *Status, fanName string) error {
 		return fmt.Errorf("no fans found")
 	}
 
+	var fanNames []string
+	var finalSpeed int
 	for name, url := range fans {
 		currentSpeed, err := getFanSpeed(url)
 		if err != nil {
@@ -114,7 +117,16 @@ func handleToggle(config *Config, status *Status, fanName string) error {
 			return fmt.Errorf("failed to set speed for %s: %w", name, err)
 		}
 
-		fmt.Printf("%s: %d%% -> %d%%\n", name, currentSpeed, newSpeed)
+		fanNames = append(fanNames, name)
+		finalSpeed = newSpeed
+	}
+
+	if len(fanNames) > 0 {
+		if finalSpeed > 0 {
+			fmt.Printf("%s - 💨 %d%%\n", strings.Join(fanNames, ", "), finalSpeed)
+		} else {
+			fmt.Printf("%s - off\n", strings.Join(fanNames, ", "))
+		}
 	}
 
 	return status.Save()
@@ -143,6 +155,7 @@ func handleDial(config *Config, status *Status, fanName string, value int) error
 		newSpeed = 100
 	}
 
+	var fanNames []string
 	for name, url := range fans {
 		if err := setFanSpeed(url, newSpeed); err != nil {
 			return fmt.Errorf("failed to set speed for %s: %w", name, err)
@@ -150,7 +163,15 @@ func handleDial(config *Config, status *Status, fanName string, value int) error
 		if newSpeed > 0 {
 			status.LastSpeeds[name] = newSpeed
 		}
-		fmt.Printf("%s: -> %d%%\n", name, newSpeed)
+		fanNames = append(fanNames, name)
+	}
+
+	if len(fanNames) > 0 {
+		direction := "⬆️"
+		if value < 0 {
+			direction = "⬇️"
+		}
+		fmt.Printf("%s %s %d%%\n", strings.Join(fanNames, ", "), direction, newSpeed)
 	}
 
 	return status.Save()
@@ -162,9 +183,12 @@ func handleSet(config *Config, status *Status, fanName string, speed int) error 
 		return fmt.Errorf("no fans found")
 	}
 
+	var errors []string
 	for name, url := range fans {
 		if err := setFanSpeed(url, speed); err != nil {
-			return fmt.Errorf("failed to set speed for %s: %w", name, err)
+			errors = append(errors, fmt.Sprintf("%s: %v", name, err))
+			fmt.Printf("%s: ERROR - %v\n", name, err)
+			continue
 		}
 		if speed > 0 {
 			status.LastSpeeds[name] = speed
@@ -172,7 +196,15 @@ func handleSet(config *Config, status *Status, fanName string, speed int) error 
 		fmt.Printf("%s: -> %d%%\n", name, speed)
 	}
 
-	return status.Save()
+	if err := status.Save(); err != nil {
+		errors = append(errors, fmt.Sprintf("failed to save status: %v", err))
+	}
+
+	if len(errors) > 0 {
+		return fmt.Errorf("errors occurred:\n  %s", strings.Join(errors, "\n  "))
+	}
+
+	return nil
 }
 
 func handleStatus(config *Config, fanName string) error {
