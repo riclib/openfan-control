@@ -1,4 +1,4 @@
-module openfan-control
+module github.com/riclib/openfan-control
 
 go 1.21
 
