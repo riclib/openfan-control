@@ -70,7 +70,7 @@ func setFanSpeed(fanURL string, speed int) error {
 		return fmt.Errorf("failed to parse response: %w", err)
 	}
 
-	if apiResp.Status != "success" {
+	if apiResp.Status != "ok" {
 		return fmt.Errorf("API error: %s", apiResp.Message)
 	}
 
