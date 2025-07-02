@@ -255,7 +255,7 @@ func selectFans(config *Config, fanName string) map[string]string {
 }
 
 func printHelp() {
-	fmt.Fprintf(os.Stderr, "OpenFan Control - Control multiple OpenFan devices\n\n")
+	fmt.Fprintf(os.Stderr, "OpenFanMicro Control - Control multiple OpenFan devices\n\n")
 	fmt.Fprintf(os.Stderr, "Usage: %s [options] <command> [args]\n\n", os.Args[0])
 	fmt.Fprintf(os.Stderr, "Commands:\n")
 	fmt.Fprintf(os.Stderr, "  status          Show current fan status (speed and RPM)\n")
