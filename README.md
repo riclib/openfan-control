@@ -1,4 +1,4 @@
-# OpenFan Control
+# OpenFan Micro Control
 
 A Go command-line tool for controlling multiple OpenFan Micro devices.
 
