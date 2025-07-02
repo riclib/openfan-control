@@ -15,15 +15,15 @@ A Go command-line tool for controlling multiple OpenFan Micro devices.
 ### Using go install (recommended)
 
 ```bash
-go install github.com/riclib/openfan-control@latest
+go install github.com/riclib/openfanmicro-control@latest
 ```
 
-This will install the `openfan-control` binary to your `$GOPATH/bin` directory (or `$HOME/go/bin` if GOPATH is not set).
+This will install the `openfanmicro-control` binary to your `$GOPATH/bin` directory (or `$HOME/go/bin` if GOPATH is not set).
 
 ### Building from source
 
 ```bash
-git clone https://github.com/riclib/openfan-control.git
+git clone https://github.com/riclib/openfanmicro-control.git
 cd openfan-control
 go build -o openfan-control
 ```
